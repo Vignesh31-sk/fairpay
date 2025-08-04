@@ -3,6 +3,9 @@ import { version } from "./package.json";
 
 // https://github.com/betomoedano/with-environments/blob/main/app.config.ts
 
+const EAS_PROJECT_ID = "2c12ca5f-0315-43b8-a46f-ed23c43e17a4";
+const OWNER = "grandmaster_subsero";
+
 // App production config
 const APP_NAME = "fairpay";
 const PROJECT_SLUG = "fairpay";
@@ -15,6 +18,7 @@ const SCHEME = "fairpay";
 
 export default ({ config }: ConfigContext): ExpoConfig => {
   console.log("⚙️ Building app for environment:", process.env.APP_ENV);
+  console.log("📦 ", process.env.NODE_ENV);
 
   const { name, bundleIdentifier, icon, adaptiveIcon, packageName, scheme } =
     getDynamicAppConfig(
@@ -48,6 +52,18 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       output: "static",
       favicon: FAVICON,
     },
+    extra: {
+      eas: {
+        projectId: EAS_PROJECT_ID,
+      },
+
+      //   appName: APP_NAME,
+      //   bundleIdentifier: bundleIdentifier,
+      //   packageName: packageName,
+      //   icon: icon,
+      //   adaptiveIcon: adaptiveIcon,
+      //   scheme: scheme,
+    },
     plugins: [
       "expo-router",
       [
@@ -59,10 +75,28 @@ export default ({ config }: ConfigContext): ExpoConfig => {
           backgroundColor: "#ffffff",
         },
       ],
+      [
+        "expo-audio",
+        {
+          microphonePermission: `Allow  ${APP_NAME} to access your microphone.`,
+        },
+      ],
+      [
+        "expo-speech-recognition",
+        {
+          microphonePermission: "Allow $(PRODUCT_NAME) to use the microphone.",
+          speechRecognitionPermission:
+            "Allow $(PRODUCT_NAME) to use speech recognition.",
+          androidSpeechServicePackages: [
+            "com.google.android.googlequicksearchbox",
+          ],
+        },
+      ],
     ],
     experiments: {
       typedRoutes: true,
     },
+    owner: OWNER,
   };
 };
 
