@@ -41,6 +41,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         backgroundColor: "#ffffff",
       },
       edgeToEdgeEnabled: true,
+      package: packageName,
     },
     web: {
       bundler: "metro",
