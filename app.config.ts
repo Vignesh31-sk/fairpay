@@ -11,9 +11,9 @@ const APP_NAME = "fairpay";
 const PROJECT_SLUG = "fairpay";
 const BUNDLE_IDENTIFIER = "com.company.fairpay";
 const PACKAGE_NAME = "com.company.fairpay";
-const ICON = "./assets/images/icon.png";
-const FAVICON = "./assets/images/favicon.png";
-const ADAPTIVE_ICON = "./assets/images/adaptive-icon.png";
+const ICON = "./assets/images/logo.png";
+const FAVICON = "./assets/images/logo.png";
+const ADAPTIVE_ICON = "./assets/images/logo.png";
 const SCHEME = "fairpay";
 
 export default ({ config }: ConfigContext): ExpoConfig => {
@@ -69,7 +69,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       [
         "expo-splash-screen",
         {
-          image: "./assets/images/splash-icon.png",
+          image: "./assets/images/logo.png",
           imageWidth: 200,
           resizeMode: "contain",
           backgroundColor: "#ffffff",
