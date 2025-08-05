@@ -4,7 +4,7 @@ import { Colors } from "@/constants/Colors";
 import { DUMMY_JOBS } from "@/constants/Data";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { Job } from "@/types";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Alert, Dimensions, FlatList, ScrollView, StyleSheet, View } from "react-native";
 import { Avatar, Badge, Button, Card, Chip, Searchbar, Text } from "react-native-paper";
@@ -185,9 +185,10 @@ export default function JobsScreen() {
               </View>
               <Avatar.Icon 
                 size={40} 
-                icon="bell-outline" 
-                style={{ backgroundColor: colors.backgroundSecondary }}
-                color={colors.icon}
+                icon="plus" 
+                style={{ backgroundColor: colors.primary + '20' }}
+                color={colors.primary}
+                onTouchEnd={() => router.push("/(tabs)/create-job")}
               />
             </View>
           </View>

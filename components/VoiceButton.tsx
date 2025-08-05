@@ -64,11 +64,6 @@ export default function VoiceButton({ onVoiceCommand }: VoiceButtonProps) {
           styles.voiceButton, 
           { 
             backgroundColor: isListening ? colors.error : colors.primary,
-            elevation: 8,
-            shadowColor: colors.shadow,
-            shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: 0.3,
-            shadowRadius: 8,
           }
         ]}
         onPress={handleVoicePress}
@@ -153,9 +148,14 @@ export default function VoiceButton({ onVoiceCommand }: VoiceButtonProps) {
 const styles = StyleSheet.create({
   voiceButton: {
     position: 'absolute',
-    bottom: 100,
-    right: 20,
+    bottom: 20,
+    alignSelf: 'center',
     zIndex: 1000,
+    elevation: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
   },
   modalOverlay: {
     flex: 1,

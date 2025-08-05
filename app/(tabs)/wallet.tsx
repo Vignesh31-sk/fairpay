@@ -2,11 +2,12 @@ import { ThemedView } from "@/components/ThemedView";
 import { LucideIcon } from "@/components/ui/LucideIcon";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { router } from "expo-router";
+import * as SpeechRecognition from 'expo-speech-recognition';
 import React from "react";
 import { Alert, Dimensions, ScrollView, StyleSheet, View } from "react-native";
 import { Avatar, Card, Text } from "react-native-paper";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
-import * as SpeechRecognition from 'expo-speech-recognition';
 
 const { width } = Dimensions.get('window');
 
@@ -103,9 +104,10 @@ export default function WalletScreen() {
               </View>
               <Avatar.Icon 
                 size={40} 
-                icon="bell-outline" 
+                icon="bell" 
                 style={{ backgroundColor: colors.backgroundSecondary }}
-                color={colors.icon}
+                color={colors.text}
+                onTouchEnd={() => router.push("/(tabs)/notifications")}
               />
             </View>
           </View>

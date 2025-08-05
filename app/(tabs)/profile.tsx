@@ -2,6 +2,7 @@ import { ThemedView } from "@/components/ThemedView";
 import { LucideIcon } from "@/components/ui/LucideIcon";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { router } from "expo-router";
 import React, { useState } from "react";
 import { Alert, Dimensions, Modal, ScrollView, StyleSheet, View } from "react-native";
 import { Avatar, Card, Divider, Text } from "react-native-paper";
@@ -50,36 +51,42 @@ export default function ProfileScreen() {
       subtitle: "Edit your profile details",
       icon: "person.fill",
       color: colors.primary,
+      action: () => Alert.alert("Personal Information", "Edit your profile details"),
     },
     {
       title: "Work History",
       subtitle: "View your job history",
       icon: "clock.fill",
       color: colors.secondary,
+      action: () => Alert.alert("Work History", "View your job history"),
     },
     {
       title: "Earnings & Payments",
       subtitle: "Manage your payments",
       icon: "indianrupeesign.circle.fill",
       color: colors.success,
+      action: () => Alert.alert("Earnings & Payments", "Manage your payments"),
     },
     {
       title: "Documents",
       subtitle: "Upload certificates & IDs",
       icon: "doc.fill",
       color: colors.accent,
+      action: () => Alert.alert("Documents", "Upload certificates & IDs"),
     },
     {
       title: "Settings",
       subtitle: "App preferences & security",
       icon: "gearshape.fill",
       color: colors.textSecondary,
+      action: () => Alert.alert("Settings", "App preferences & security"),
     },
     {
       title: "Help & Support",
       subtitle: "Get help and contact support",
       icon: "questionmark.circle.fill",
       color: colors.warning,
+      action: () => router.push("/(tabs)/grievance"),
     },
   ];
 
@@ -100,9 +107,13 @@ export default function ProfileScreen() {
               </View>
               <Avatar.Icon 
                 size={40} 
-                icon="bell-outline" 
-                style={{ backgroundColor: colors.backgroundSecondary }}
-                color={colors.icon}
+                icon="logout" 
+                style={{ backgroundColor: colors.error + '20' }}
+                color={colors.error}
+                onTouchEnd={() => Alert.alert("Logout", "Are you sure you want to logout?", [
+                  { text: "Cancel", style: "cancel" },
+                  { text: "Logout", style: "destructive", onPress: () => Alert.alert("Logged Out", "Successfully logged out") }
+                ])}
               />
             </View>
           </View>
@@ -258,11 +269,11 @@ export default function ProfileScreen() {
             </Text>
             <View style={styles.menuGrid}>
               {menuItems.map((item, index) => (
-                <Card 
-                  key={index} 
-                  style={[styles.menuCard, { backgroundColor: colors.card, borderColor: colors.cardBorder }]}
-                  onPress={() => Alert.alert(item.title, item.subtitle)}
-                >
+                                 <Card 
+                   key={index} 
+                   style={[styles.menuCard, { backgroundColor: colors.card, borderColor: colors.cardBorder }]}
+                   onPress={item.action || (() => Alert.alert(item.title, item.subtitle))}
+                 >
                   <Card.Content style={styles.menuCardContent}>
                     <View style={[styles.menuIcon, { backgroundColor: item.color + '20' }]}>
                       <LucideIcon size={20} name={item.icon} color={item.color} />

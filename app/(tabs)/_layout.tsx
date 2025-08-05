@@ -1,19 +1,32 @@
 import { Tabs } from "expo-router";
-import React from "react";
-import { Platform } from "react-native";
+import React, { useState } from "react";
+import { Platform, StyleSheet } from "react-native";
+import { FAB } from "react-native-paper";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { HapticTab } from "@/components/HapticTab";
 import { LucideIcon } from "@/components/ui/LucideIcon";
 import TabBarBackground from "@/components/ui/TabBarBackground";
-import VoiceButton from "@/components/VoiceButton";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { useVoiceProcessing } from "@/hooks/useVoiceProcessing";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? "light"];
   const insets = useSafeAreaInsets();
+  const [isListening, setIsListening] = useState(false);
+  const { startListening, stopListening, transcript } = useVoiceProcessing();
+
+  const handleVoicePress = () => {
+    if (isListening) {
+      stopListening();
+      setIsListening(false);
+    } else {
+      startListening();
+      setIsListening(true);
+    }
+  };
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top']}>
@@ -28,6 +41,7 @@ export default function TabLayout() {
             height: 88,
             paddingBottom: 20,
             paddingTop: 8,
+            paddingHorizontal: 60,
             borderTopWidth: 1,
             borderTopColor: colors.cardBorder,
             backgroundColor: colors.card,
@@ -47,10 +61,10 @@ export default function TabLayout() {
           tabBarLabelStyle: {
             fontSize: 12,
             fontWeight: '500',
-            marginTop: 4,
+            marginTop: 6,
           },
           tabBarIconStyle: {
-            marginTop: 4,
+            marginTop: 6,
           },
         }}
       >
@@ -80,6 +94,7 @@ export default function TabLayout() {
             ),
           }}
         />
+
         <Tabs.Screen
           name="wallet"
           options={{
@@ -89,19 +104,6 @@ export default function TabLayout() {
                 size={24} 
                 name="wallet" 
                 color={color} 
-              />
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="grievance"
-          options={{
-            title: "Support",
-            tabBarIcon: ({ color, focused }) => (
-              <LucideIcon
-                size={24}
-                name="exclamationmark.triangle.fill"
-                color={color}
               />
             ),
           }}
@@ -119,10 +121,55 @@ export default function TabLayout() {
             ),
           }}
         />
+        <Tabs.Screen
+          name="grievance"
+          options={{
+            href: null, // This hides the tab from navigation
+          }}
+        />
+        <Tabs.Screen
+          name="notifications"
+          options={{
+            href: null, // This hides the tab from navigation
+          }}
+        />
+        <Tabs.Screen
+          name="create-job"
+          options={{
+            href: null, // This hides the tab from navigation
+          }}
+        />
       </Tabs>
       
       {/* Global Voice Button */}
-      <VoiceButton />
+      <FAB
+        icon={isListening ? "stop" : "microphone"}
+        style={[
+          styles.voiceButton,
+          {
+            backgroundColor: isListening ? colors.error : colors.primary,
+            bottom: insets.bottom + 44,
+          }
+        ]}
+        onPress={handleVoicePress}
+        color={colors.card}
+      />
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  voiceButton: {
+    position: 'absolute',
+    left: '50%',
+    marginLeft: -28,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    elevation: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+  },
+});

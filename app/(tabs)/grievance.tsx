@@ -4,24 +4,25 @@ import { Colors } from "@/constants/Colors";
 import { DUMMY_GRIEVANCES } from "@/constants/Data";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { Grievance } from "@/types";
+import { router } from "expo-router";
 import {
-  ExpoSpeechRecognitionModule,
-  useSpeechRecognitionEvent,
+    ExpoSpeechRecognitionModule,
+    useSpeechRecognitionEvent,
 } from "expo-speech-recognition";
 import React, { useState } from "react";
 import { Alert, FlatList, ScrollView, StyleSheet, View } from "react-native";
 import {
-  Avatar,
-  Badge,
-  Button,
-  Card,
-  Chip,
-  FAB,
-  Menu,
-  Modal,
-  Portal,
-  Text,
-  TextInput,
+    Avatar,
+    Badge,
+    Button,
+    Card,
+    Chip,
+    FAB,
+    Menu,
+    Modal,
+    Portal,
+    Text,
+    TextInput,
 } from "react-native-paper";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -297,20 +298,23 @@ export default function GrievanceScreen() {
           {/* Header */}
           <View style={styles.header}>
             <View style={styles.headerTop}>
-              <View>
-                <Text variant="headlineSmall" style={[styles.headerTitle, { color: colors.text }]}>
-                  Support & Grievances
-                </Text>
-                <Text variant="titleMedium" style={[styles.headerSubtitle, { color: colors.textSecondary }]}>
-                  {grievances.length} grievances filed
-                </Text>
-              </View>
-              <Avatar.Icon 
-                size={40} 
-                icon="exclamationmark.triangle.fill" 
-                style={{ backgroundColor: colors.warning + '20' }}
-                color={colors.warning}
-              />
+              <View style={styles.headerLeft}>
+                                 <Avatar.Icon 
+                   size={32} 
+                   icon="chevron-left" 
+                   style={{ backgroundColor: colors.backgroundSecondary }}
+                   color={colors.text}
+                   onTouchEnd={() => router.back()}
+                 />
+                               <View style={styles.headerTextContainer}>
+                 <Text variant="headlineSmall" style={[styles.headerTitle, { color: colors.text }]}>
+                   Support & Grievances
+                 </Text>
+                 <Text variant="titleMedium" style={[styles.headerSubtitle, { color: colors.textSecondary }]}>
+                   {grievances.length} grievances filed
+                 </Text>
+               </View>
+             </View>
             </View>
           </View>
 
@@ -587,6 +591,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  headerLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  headerTextContainer: {
+    flex: 1,
   },
   headerTitle: {
     fontWeight: '600',

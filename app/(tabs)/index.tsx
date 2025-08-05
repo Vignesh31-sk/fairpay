@@ -3,6 +3,7 @@ import { LucideIcon } from "@/components/ui/LucideIcon";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { useVoiceProcessing } from "@/hooks/useVoiceProcessing";
+import { router } from "expo-router";
 import React from "react";
 import { Alert, Dimensions, ScrollView, StyleSheet, View } from "react-native";
 import { Avatar, Card, Text } from "react-native-paper";
@@ -76,22 +77,23 @@ export default function HomeScreen() {
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }} edges={['top', 'bottom']}>
       <ThemedView style={[styles.container, { paddingBottom: insets.bottom }]}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          {/* Header Section */}
+          {/* Header */}
           <View style={styles.header}>
             <View style={styles.headerTop}>
               <View>
-                <Text variant="headlineSmall" style={[styles.greeting, { color: colors.text }]}>
+                <Text variant="headlineSmall" style={[styles.headerTitle, { color: colors.text }]}>
                   {greeting}, {userName}
                 </Text>
-                <Text variant="titleMedium" style={[styles.welcomeText, { color: colors.textSecondary }]}>
+                <Text variant="titleMedium" style={[styles.headerSubtitle, { color: colors.textSecondary }]}>
                   Welcome to FairPay
                 </Text>
               </View>
               <Avatar.Icon 
                 size={40} 
-                icon="bell-outline" 
+                icon="bell" 
                 style={{ backgroundColor: colors.backgroundSecondary }}
-                color={colors.icon}
+                color={colors.text}
+                onTouchEnd={() => router.push("/(tabs)/notifications")}
               />
             </View>
           </View>
@@ -144,6 +146,38 @@ export default function HomeScreen() {
               </Card.Content>
             </Card>
           </View>
+
+          {/* Help & Support Card */}
+          <Card 
+            style={[styles.supportCard, { backgroundColor: colors.card, borderColor: colors.cardBorder }]}
+            onPress={() => router.push("/(tabs)/grievance")}
+          >
+            <Card.Content style={styles.supportCardContent}>
+              <View style={styles.supportHeader}>
+                <LucideIcon size={24} name="help-circle" color={colors.warning} />
+                <Text variant="titleMedium" style={[styles.supportTitle, { color: colors.text }]}>
+                  Help & Support
+                </Text>
+              </View>
+              <Text variant="bodyMedium" style={[styles.supportSubtitle, { color: colors.textSecondary }]}>
+                Get help with your account, payments, or report issues
+              </Text>
+              <View style={styles.supportActions}>
+                <View style={styles.supportAction}>
+                  <LucideIcon size={16} name="message-circle" color={colors.primary} />
+                  <Text variant="bodySmall" style={[styles.supportActionText, { color: colors.primary }]}>
+                    Contact Support
+                  </Text>
+                </View>
+                <View style={styles.supportAction}>
+                  <LucideIcon size={16} name="file-text" color={colors.secondary} />
+                  <Text variant="bodySmall" style={[styles.supportActionText, { color: colors.secondary }]}>
+                    Report Issue
+                  </Text>
+                </View>
+              </View>
+            </Card.Content>
+          </Card>
 
           {/* Recommended Jobs Section */}
           <View style={styles.recommendedContainer}>
@@ -218,11 +252,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  greeting: {
+  headerTitle: {
     fontWeight: '600',
     marginBottom: 4,
   },
-  welcomeText: {
+  headerSubtitle: {
     fontWeight: '400',
   },
   cardsContainer: {
@@ -279,6 +313,43 @@ const styles = StyleSheet.create({
   },
   walletPending: {
     fontWeight: '500',
+  },
+  supportCard: {
+    marginHorizontal: 20,
+    borderRadius: 12,
+    borderWidth: 1,
+    elevation: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    marginBottom: 24,
+  },
+  supportCardContent: {
+    padding: 16,
+  },
+  supportHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  supportTitle: {
+    fontWeight: '600',
+    marginLeft: 8,
+  },
+  supportSubtitle: {
+    marginBottom: 16,
+  },
+  supportActions: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  supportAction: {
+    alignItems: 'center',
+  },
+  supportActionText: {
+    fontWeight: '500',
+    marginTop: 4,
   },
   recommendedContainer: {
     paddingHorizontal: 20,
