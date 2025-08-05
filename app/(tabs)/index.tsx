@@ -5,12 +5,13 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import { useVoiceProcessing } from "@/hooks/useVoiceProcessing";
 import React from "react";
 import { Alert, Dimensions, ScrollView, StyleSheet, View } from "react-native";
-import { ActivityIndicator, Avatar, Card, FAB, Text } from "react-native-paper";
+import { Avatar, Card, Text } from "react-native-paper";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 const { width } = Dimensions.get('window');
 
 export default function HomeScreen() {
+  
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? "light"];
   const insets = useSafeAreaInsets();
@@ -23,49 +24,64 @@ export default function HomeScreen() {
     stopListening,
   } = useVoiceProcessing();
 
-  const quickActions = [
+  // Mock user data - in real app this would come from user context/state
+  const userName = "John"; // This should be dynamic based on logged-in user
+  const currentTime = new Date();
+  const isMorning = currentTime.getHours() < 12;
+  const isAfternoon = currentTime.getHours() >= 12 && currentTime.getHours() < 17;
+  const isEvening = currentTime.getHours() >= 17;
+
+  let greeting = "Good morning";
+  if (isAfternoon) greeting = "Good afternoon";
+  if (isEvening) greeting = "Good evening";
+
+  // Mock attendance data
+  const attendanceData = {
+    isWorking: true,
+    startTime: "09:00 AM",
+    currentTime: "02:30 PM",
+    totalHours: "5h 30m",
+  };
+
+  // Mock wallet data
+  const walletData = {
+    balance: "₹2,450",
+    thisMonth: "₹8,200",
+    pending: "₹1,800",
+  };
+
+  // Mock recommended jobs
+  const recommendedJobs = [
     {
-      title: "Find Jobs",
-      subtitle: "Search for available positions",
-      icon: "briefcase.fill",
-      color: colors.primary,
-      action: () => Alert.alert("Voice Command", 'Try saying "Show me jobs"'),
+      id: 1,
+      title: "Delivery Partner",
+      company: "FoodCorp",
+      location: "Mumbai Central",
+      pay: "₹200/hr",
+      duration: "4 hours",
+      rating: 4.5,
     },
     {
-      title: "My Profile",
-      subtitle: "View and edit your profile",
-      icon: "person.fill",
-      color: colors.secondary,
-      action: () => Alert.alert("Voice Command", 'Try saying "Go to profile"'),
-    },
-    {
-      title: "Analytics",
-      subtitle: "View your earnings and stats",
-      icon: "chart.bar.fill",
-      color: colors.accent,
-      action: () => Alert.alert("Voice Command", 'Try saying "Open analytics"'),
-    },
-    {
-      title: "File Complaint",
-      subtitle: "Report issues or grievances",
-      icon: "exclamationmark.triangle.fill",
-      color: colors.warning,
-      action: () => Alert.alert("Voice Command", 'Try saying "File a complaint"'),
+      id: 2,
+      title: "Warehouse Assistant",
+      company: "LogiTech",
+      location: "Andheri West",
+      pay: "₹180/hr",
+      duration: "6 hours",
+      rating: 4.2,
     },
   ];
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }} edges={['top', 'bottom']}>
-  <ThemedView style={[styles.container, { paddingBottom: insets.bottom }]}>
-
-
+      <ThemedView style={[styles.container, { paddingBottom: insets.bottom }]}>
         <ScrollView showsVerticalScrollIndicator={false}>
           {/* Header Section */}
           <View style={styles.header}>
             <View style={styles.headerTop}>
               <View>
                 <Text variant="headlineSmall" style={[styles.greeting, { color: colors.text }]}>
-                  Good morning, Worker
+                  {greeting}, {userName}
                 </Text>
                 <Text variant="titleMedium" style={[styles.welcomeText, { color: colors.textSecondary }]}>
                   Welcome to FairPay
@@ -80,123 +96,108 @@ export default function HomeScreen() {
             </View>
           </View>
 
-          {/* Voice Assistant Card */}
-          <Card style={[styles.voiceCard, { backgroundColor: colors.card, borderColor: colors.cardBorder }]}>
-            <Card.Content style={styles.voiceCardContent}>
-              <View style={styles.voiceHeader}>
-                <LucideIcon size={24} name="mic.fill" color={colors.primary} />
-                <Text variant="titleMedium" style={[styles.voiceTitle, { color: colors.text }]}>
-                  Voice Assistant
-                </Text>
-              </View>
-              
-              <View style={styles.voiceStatus}>
-                {isListening && (
-                  <ActivityIndicator
-                    size="large"
-                    color={colors.primary}
-                    style={styles.listeningIndicator}
-                  />
-                )}
-                <Text variant="bodyLarge" style={[styles.voiceStatusText, { color: colors.textSecondary }]}>
-                  {isListening
-                    ? "Listening..."
-                    : isProcessing
-                    ? "Processing..."
-                    : "Ready to help you"}
-                </Text>
-                {transcript ? (
-                  <Text variant="bodyMedium" style={[styles.transcript, { color: colors.primary }]}>
-                    &ldquo;{transcript}&rdquo;
+          {/* Attendance and Wallet Cards */}
+          <View style={styles.cardsContainer}>
+            {/* Attendance Card */}
+            <Card style={[styles.infoCard, { backgroundColor: colors.card, borderColor: colors.cardBorder }]}>
+              <Card.Content style={styles.infoCardContent}>
+                <View style={styles.cardHeader}>
+                  <LucideIcon size={20} name="clock" color={colors.primary} />
+                  <Text variant="titleSmall" style={[styles.cardTitle, { color: colors.text }]}>
+                    Attendance
                   </Text>
-                ) : null}
-              </View>
+                </View>
+                <View style={styles.attendanceInfo}>
+                  <Text variant="bodyLarge" style={[styles.attendanceStatus, { color: attendanceData.isWorking ? colors.success : colors.textSecondary }]}>
+                    {attendanceData.isWorking ? "🟢 Working" : "⚪ Not Working"}
+                  </Text>
+                  <Text variant="bodyMedium" style={[styles.attendanceTime, { color: colors.textSecondary }]}>
+                    {attendanceData.startTime} - {attendanceData.currentTime}
+                  </Text>
+                  <Text variant="titleMedium" style={[styles.attendanceHours, { color: colors.primary }]}>
+                    {attendanceData.totalHours}
+                  </Text>
+                </View>
+              </Card.Content>
+            </Card>
 
-              {/* Voice Button */}
-              <View style={styles.micContainer}>
-                <FAB
-                  icon={isListening ? "stop" : "microphone"}
-                  size="large"
-                  style={[
-                    styles.micButton, 
-                    { backgroundColor: isListening ? colors.error : colors.primary },
-                    isListening && styles.micButtonActive
-                  ]}
-                  onPress={isListening ? stopListening : startListening}
-                  disabled={isProcessing}
-                />
-                <Text variant="bodySmall" style={[styles.micLabel, { color: colors.textTertiary }]}>
-                  {isListening ? "Tap to stop" : "Tap to speak"}
-                </Text>
-              </View>
-            </Card.Content>
-          </Card>
+            {/* Wallet Card */}
+            <Card style={[styles.infoCard, { backgroundColor: colors.card, borderColor: colors.cardBorder }]}>
+              <Card.Content style={styles.infoCardContent}>
+                <View style={styles.cardHeader}>
+                  <LucideIcon size={20} name="wallet" color={colors.secondary} />
+                  <Text variant="titleSmall" style={[styles.cardTitle, { color: colors.text }]}>
+                    Wallet
+                  </Text>
+                </View>
+                <View style={styles.walletInfo}>
+                  <Text variant="bodyLarge" style={[styles.walletBalance, { color: colors.text }]}>
+                    {walletData.balance}
+                  </Text>
+                  <Text variant="bodySmall" style={[styles.walletSubtitle, { color: colors.textSecondary }]}>
+                    This month: {walletData.thisMonth}
+                  </Text>
+                  <Text variant="bodySmall" style={[styles.walletPending, { color: colors.accent }]}>
+                    Pending: {walletData.pending}
+                  </Text>
+                </View>
+              </Card.Content>
+            </Card>
+          </View>
 
-          {/* Quick Actions Grid */}
-          <View style={styles.quickActionsContainer}>
+          {/* Recommended Jobs Section */}
+          <View style={styles.recommendedContainer}>
             <Text variant="titleMedium" style={[styles.sectionTitle, { color: colors.text }]}>
-              Quick Actions
+              Recommended Jobs
             </Text>
-            <View style={styles.actionsGrid}>
-              {quickActions.map((action, index) => (
+            <View style={styles.jobsList}>
+              {recommendedJobs.map((job, index) => (
                 <Card 
-                  key={index} 
-                  style={[styles.actionCard, { backgroundColor: colors.card, borderColor: colors.cardBorder }]}
-                  onPress={action.action}
+                  key={job.id} 
+                  style={[styles.jobCard, { backgroundColor: colors.card, borderColor: colors.cardBorder }]}
+                  onPress={() => Alert.alert("Job Details", `Apply for ${job.title} at ${job.company}`)}
                 >
-                  <Card.Content style={styles.actionCardContent}>
-                    <View style={[styles.actionIcon, { backgroundColor: action.color + '20' }]}>
-                      <LucideIcon size={24} name={action.icon} color={action.color} />
+                  <Card.Content style={styles.jobCardContent}>
+                    <View style={styles.jobHeader}>
+                      <View>
+                        <Text variant="titleSmall" style={[styles.jobTitle, { color: colors.text }]}>
+                          {job.title}
+                        </Text>
+                        <Text variant="bodyMedium" style={[styles.jobCompany, { color: colors.textSecondary }]}>
+                          {job.company}
+                        </Text>
+                      </View>
+                      <View style={[styles.jobPay, { backgroundColor: colors.primary + '20' }]}>
+                        <Text variant="bodySmall" style={[styles.jobPayText, { color: colors.primary }]}>
+                          {job.pay}
+                        </Text>
+                      </View>
                     </View>
-                    <Text variant="titleSmall" style={[styles.actionTitle, { color: colors.text }]}>
-                      {action.title}
-                    </Text>
-                    <Text variant="bodySmall" style={[styles.actionSubtitle, { color: colors.textSecondary }]}>
-                      {action.subtitle}
-                    </Text>
+                    <View style={styles.jobDetails}>
+                      <View style={styles.jobDetail}>
+                        <LucideIcon size={16} name="map-pin" color={colors.textSecondary} />
+                        <Text variant="bodySmall" style={[styles.jobDetailText, { color: colors.textSecondary }]}>
+                          {job.location}
+                        </Text>
+                      </View>
+                      <View style={styles.jobDetail}>
+                        <LucideIcon size={16} name="clock" color={colors.textSecondary} />
+                        <Text variant="bodySmall" style={[styles.jobDetailText, { color: colors.textSecondary }]}>
+                          {job.duration}
+                        </Text>
+                      </View>
+                      <View style={styles.jobDetail}>
+                        <LucideIcon size={16} name="star" color={colors.accent} />
+                        <Text variant="bodySmall" style={[styles.jobDetailText, { color: colors.textSecondary }]}>
+                          {job.rating}
+                        </Text>
+                      </View>
+                    </View>
                   </Card.Content>
                 </Card>
               ))}
             </View>
           </View>
-
-          {/* Help Section */}
-          <Card style={[styles.helpCard, { backgroundColor: colors.backgroundSecondary, borderColor: colors.cardBorder }]}>
-            <Card.Content>
-              <View style={styles.helpHeader}>
-                <LucideIcon size={24} name="questionmark.circle.fill" color={colors.primary} />
-                <Text variant="titleMedium" style={[styles.helpTitle, { color: colors.text }]}>
-                  How to Use Voice Commands
-                </Text>
-              </View>
-              <View style={styles.helpSteps}>
-                <View style={styles.helpStep}>
-                  <View style={[styles.stepNumber, { backgroundColor: colors.primary }]}>
-                    <Text style={[styles.stepNumberText, { color: colors.card }]}>1</Text>
-                  </View>
-                  <Text variant="bodyMedium" style={[styles.helpText, { color: colors.textSecondary }]}>
-                    Tap the microphone button
-                  </Text>
-                </View>
-                <View style={styles.helpStep}>
-                  <View style={[styles.stepNumber, { backgroundColor: colors.primary }]}>
-                    <Text style={[styles.stepNumberText, { color: colors.card }]}>2</Text>
-                  </View>
-                  <Text variant="bodyMedium" style={[styles.helpText, { color: colors.textSecondary }]}>
-                    Speak clearly in Hindi or English
-                  </Text>
-                </View>
-                <View style={styles.helpStep}>
-                  <View style={[styles.stepNumber, { backgroundColor: colors.primary }]}>
-                    <Text style={[styles.stepNumberText, { color: colors.card }]}>3</Text>
-                  </View>
-                  <Text variant="bodyMedium" style={[styles.helpText, { color: colors.textSecondary }]}>
-                    Wait for processing and navigation
-                  </Text>
-                </View>
-              </View>
-            </Card.Content>
-          </Card>
         </ScrollView>
       </ThemedView>
     </SafeAreaView>
@@ -224,10 +225,15 @@ const styles = StyleSheet.create({
   welcomeText: {
     fontWeight: '400',
   },
-  voiceCard: {
-    marginHorizontal: 20,
+  cardsContainer: {
+    flexDirection: 'row',
+    paddingHorizontal: 20,
     marginBottom: 24,
-    borderRadius: 16,
+    gap: 12,
+  },
+  infoCard: {
+    flex: 1,
+    borderRadius: 12,
     borderWidth: 1,
     elevation: 2,
     shadowColor: '#000',
@@ -235,47 +241,46 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 8,
   },
-  voiceCardContent: {
-    padding: 20,
+  infoCardContent: {
+    padding: 16,
   },
-  voiceHeader: {
+  cardHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 12,
   },
-  voiceTitle: {
+  cardTitle: {
     fontWeight: '600',
     marginLeft: 8,
   },
-  voiceStatus: {
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  listeningIndicator: {
-    marginBottom: 8,
-  },
-  voiceStatusText: {
-    fontWeight: '500',
-    marginBottom: 8,
-  },
-  transcript: {
-    fontStyle: 'italic',
-    textAlign: 'center',
-    fontWeight: '500',
-  },
-  micContainer: {
+  attendanceInfo: {
     alignItems: 'center',
   },
-  micButton: {
+  attendanceStatus: {
+    fontWeight: '600',
+    marginBottom: 4,
+  },
+  attendanceTime: {
     marginBottom: 8,
   },
-  micButtonActive: {
-    transform: [{ scale: 1.1 }],
+  attendanceHours: {
+    fontWeight: '700',
   },
-  micLabel: {
+  walletInfo: {
+    alignItems: 'center',
+  },
+  walletBalance: {
+    fontWeight: '700',
+    fontSize: 20,
+    marginBottom: 4,
+  },
+  walletSubtitle: {
+    marginBottom: 4,
+  },
+  walletPending: {
     fontWeight: '500',
   },
-  quickActionsContainer: {
+  recommendedContainer: {
     paddingHorizontal: 20,
     marginBottom: 24,
   },
@@ -283,84 +288,52 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginBottom: 16,
   },
-  actionsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-  },
-  actionCard: {
-    width: (width - 60) / 2,
-    marginBottom: 12,
-    borderRadius: 12,
-    borderWidth: 1,
-    elevation: 1,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-  },
-  actionCardContent: {
-    padding: 16,
-    alignItems: 'center',
-  },
-  actionIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  actionTitle: {
-    fontWeight: '600',
-    marginBottom: 4,
-    textAlign: 'center',
-  },
-  actionSubtitle: {
-    textAlign: 'center',
-    lineHeight: 16,
-  },
-  helpCard: {
-    marginHorizontal: 20,
-    marginBottom: 24,
-    borderRadius: 16,
-    borderWidth: 1,
-    elevation: 1,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-  },
-  helpHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  helpTitle: {
-    fontWeight: '600',
-    marginLeft: 8,
-  },
-  helpSteps: {
+  jobsList: {
     gap: 12,
   },
-  helpStep: {
+  jobCard: {
+    borderRadius: 12,
+    borderWidth: 1,
+    elevation: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+  },
+  jobCardContent: {
+    padding: 16,
+  },
+  jobHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 12,
+  },
+  jobTitle: {
+    fontWeight: '600',
+    marginBottom: 4,
+  },
+  jobCompany: {
+    fontWeight: '400',
+  },
+  jobPay: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
+  },
+  jobPayText: {
+    fontWeight: '600',
+  },
+  jobDetails: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  jobDetail: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  stepNumber: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 12,
+  jobDetailText: {
+    marginLeft: 4,
   },
-  stepNumberText: {
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  helpText: {
-    flex: 1,
-    lineHeight: 20,
-  },
+
 });

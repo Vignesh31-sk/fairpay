@@ -6,6 +6,7 @@ import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context"
 import { HapticTab } from "@/components/HapticTab";
 import { LucideIcon } from "@/components/ui/LucideIcon";
 import TabBarBackground from "@/components/ui/TabBarBackground";
+import VoiceButton from "@/components/VoiceButton";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 
@@ -56,11 +57,11 @@ export default function TabLayout() {
         <Tabs.Screen
           name="index"
           options={{
-            title: "Voice Hub",
+            title: "Home",
             tabBarIcon: ({ color, focused }) => (
               <LucideIcon 
                 size={24} 
-                name="mic.fill" 
+                name="home" 
                 color={color} 
               />
             ),
@@ -80,13 +81,13 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
-          name="analytics"
+          name="wallet"
           options={{
-            title: "Analytics",
+            title: "Wallet",
             tabBarIcon: ({ color, focused }) => (
               <LucideIcon 
                 size={24} 
-                name="chart.bar.fill" 
+                name="wallet" 
                 color={color} 
               />
             ),
@@ -119,6 +120,9 @@ export default function TabLayout() {
           }}
         />
       </Tabs>
+      
+      {/* Global Voice Button */}
+      <VoiceButton />
     </SafeAreaView>
   );
 }
