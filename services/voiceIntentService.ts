@@ -1,7 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 
 const ai = new GoogleGenAI({
-  apiKey: "AIzaSyAJOR6_MEg5JHkaQCZQ95mYTDgW8z6yhkM",
+  apiKey: process.env.VOICE_API_KEY || "AIzaSyAJOR6_MEg5JHkaQCZQ95mYTDgW8z6yhkM",
 });
 
 export interface VoiceIntent {
