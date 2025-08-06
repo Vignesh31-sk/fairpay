@@ -1,7 +1,13 @@
 import { GoogleGenAI } from "@google/genai";
+import Constants from "expo-constants";
+
+const apiKey = Constants.expoConfig?.extra?.googleApiKey;
+
+if (!apiKey)
+  throw new Error("Google API key is not defined in app configuration");
 
 const ai = new GoogleGenAI({
-  apiKey: process.env.VOICE_API_KEY || "AIzaSyAJOR6_MEg5JHkaQCZQ95mYTDgW8z6yhkM",
+  apiKey: apiKey,
 });
 
 export interface VoiceIntent {

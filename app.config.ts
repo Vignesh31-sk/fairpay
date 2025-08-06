@@ -17,13 +17,15 @@ const ADAPTIVE_ICON = "./assets/images/logo.png";
 const SCHEME = "fairpay";
 
 export default ({ config }: ConfigContext): ExpoConfig => {
-  console.log("⚙️ Building app for environment:", process.env.APP_ENV);
-  console.log("📦 ", process.env.NODE_ENV);
+  console.log("⚙️ Building app for environment:", process.env.NODE_ENV);
 
   const { name, bundleIdentifier, icon, adaptiveIcon, packageName, scheme } =
     getDynamicAppConfig(
-      (process.env.APP_ENV as "development" | "preview" | "production") ||
-        "development"
+      (process.env.NODE_ENV as
+        | "development"
+        | "preview"
+        | "production"
+        | "test") || "development"
     );
 
   return {
@@ -56,7 +58,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       eas: {
         projectId: EAS_PROJECT_ID,
       },
-
+      googleApiKey: process.env.GOOGLE_API_KEY,
       //   appName: APP_NAME,
       //   bundleIdentifier: bundleIdentifier,
       //   packageName: packageName,
@@ -102,7 +104,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
 
 // Dynamically configure the app based on the environment.
 export const getDynamicAppConfig = (
-  environment: "development" | "preview" | "production"
+  environment: "development" | "preview" | "production" | "test"
 ) => {
   if (environment === "production") {
     return {
@@ -115,7 +117,7 @@ export const getDynamicAppConfig = (
     };
   }
 
-  if (environment === "preview") {
+  if (environment === "preview" || environment === "test") {
     return {
       name: `${APP_NAME} Preview`,
       bundleIdentifier: `${BUNDLE_IDENTIFIER}.preview`,
